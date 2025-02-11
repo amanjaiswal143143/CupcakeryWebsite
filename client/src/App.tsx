@@ -9,6 +9,7 @@ import AdminPage from "@/pages/admin-page";
 import AuthPage from "@/pages/auth-page";
 import CartPage from "@/pages/cart-page";
 import HamperBuilder from "@/pages/hamper-builder";
+import UserOrdersPage from "@/pages/user-orders";
 import NotFound from "@/pages/not-found";
 import Navbar from "@/components/layout/navbar";
 import { ProtectedRoute } from "./lib/protected-route";
@@ -23,6 +24,7 @@ function Router() {
         <Route path="/auth" component={AuthPage} />
         <Route path="/cart" component={CartPage} />
         <Route path="/hamper-builder" component={HamperBuilder} />
+        <ProtectedRoute path="/orders" component={UserOrdersPage} />
         <ProtectedRoute path="/admin" component={AdminPage} adminOnly />
         <Route component={NotFound} />
       </Switch>

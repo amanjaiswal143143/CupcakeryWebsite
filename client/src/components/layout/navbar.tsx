@@ -42,6 +42,11 @@ export default function Navbar() {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
+                {!user.isAdmin && (
+                  <DropdownMenuItem asChild>
+                    <Link href="/orders">My Orders</Link>
+                  </DropdownMenuItem>
+                )}
                 {user.isAdmin && (
                   <DropdownMenuItem asChild>
                     <Link href="/admin">Admin Dashboard</Link>
