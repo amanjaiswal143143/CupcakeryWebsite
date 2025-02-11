@@ -1,7 +1,7 @@
-import { Product, InsertProduct, Order, InsertOrder, Testimonial, InsertTestimonial, User, InsertUser } from "@shared/schema";
+import { Product, InsertProduct, Order, InsertOrder, Testimonial, InsertTestimonial, User, InsertUser, Notification, InsertNotification } from "@shared/schema";
 import { db } from "./db";
 import { eq } from "drizzle-orm";
-import { products, orders, testimonials, users } from "@shared/schema";
+import { products, orders, testimonials, users, notifications } from "@shared/schema";
 import session from "express-session";
 import connectPg from "connect-pg-simple";
 import { pool } from "./db";
@@ -23,8 +23,14 @@ export interface IStorage {
 
   // Orders
   getOrders(): Promise<Order[]>;
+  getUserOrders(userId: number): Promise<Order[]>;
   createOrder(order: InsertOrder): Promise<Order>;
   updateOrderStatus(id: number, status: string): Promise<Order | undefined>;
+
+  // Notifications
+  getNotifications(userId: number): Promise<Notification[]>;
+  createNotification(notification: InsertNotification): Promise<Notification>;
+  markNotificationAsRead(id: number): Promise<Notification | undefined>;
 
   // Testimonials
   getTestimonials(approved?: boolean): Promise<Testimonial[]>;
@@ -98,6 +104,10 @@ export class DatabaseStorage implements IStorage {
     return await db.select().from(orders);
   }
 
+  async getUserOrders(userId: number): Promise<Order[]> {
+    return await db.select().from(orders).where(eq(orders.userId, userId));
+  }
+
   async createOrder(order: InsertOrder): Promise<Order> {
     const [newOrder] = await db.insert(orders).values(order).returning();
     return newOrder;
@@ -108,6 +118,25 @@ export class DatabaseStorage implements IStorage {
       .update(orders)
       .set({ status })
       .where(eq(orders.id, id))
+      .returning();
+    return updated;
+  }
+
+  // Notification methods
+  async getNotifications(userId: number): Promise<Notification[]> {
+    return await db.select().from(notifications).where(eq(notifications.userId, userId));
+  }
+
+  async createNotification(notification: InsertNotification): Promise<Notification> {
+    const [newNotification] = await db.insert(notifications).values(notification).returning();
+    return newNotification;
+  }
+
+  async markNotificationAsRead(id: number): Promise<Notification | undefined> {
+    const [updated] = await db
+      .update(notifications)
+      .set({ isRead: true })
+      .where(eq(notifications.id, id))
       .returning();
     return updated;
   }

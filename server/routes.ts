@@ -14,7 +14,6 @@ function isAdmin(req: Express.Request, res: Express.Response, next: Express.Next
 }
 
 export function registerRoutes(app: Express): Server {
-  // Set up authentication
   setupAuth(app);
 
   // Products
@@ -52,15 +51,55 @@ export function registerRoutes(app: Express): Server {
     res.json(orders);
   });
 
+  app.get("/api/orders/user", async (req, res) => {
+    if (!req.isAuthenticated()) return res.status(401).send("Unauthorized");
+    const orders = await storage.getUserOrders(req.user!.id);
+    res.json(orders);
+  });
+
   app.post("/api/orders", async (req, res) => {
-    const order = await storage.createOrder(req.body);
+    if (!req.isAuthenticated()) return res.status(401).send("Unauthorized");
+    const order = await storage.createOrder({
+      ...req.body,
+      userId: req.user!.id,
+    });
+
+    // Create notification for admin
+    await storage.createNotification({
+      userId: 1, // Admin user ID
+      title: "New Order Received",
+      message: `New order #${order.id} from ${order.customerName}`,
+    });
+
     res.status(201).json(order);
   });
 
   app.patch("/api/orders/:id/status", isAdmin, async (req, res) => {
     const updated = await storage.updateOrderStatus(Number(req.params.id), req.body.status);
     if (!updated) return res.status(404).send("Order not found");
+
+    // Create notification for user
+    await storage.createNotification({
+      userId: updated.userId,
+      title: "Order Status Updated",
+      message: `Your order #${updated.id} status has been updated to: ${updated.status}`,
+    });
+
     res.json(updated);
+  });
+
+  // Notifications
+  app.get("/api/notifications", async (req, res) => {
+    if (!req.isAuthenticated()) return res.status(401).send("Unauthorized");
+    const notifications = await storage.getNotifications(req.user!.id);
+    res.json(notifications);
+  });
+
+  app.post("/api/notifications/:id/read", async (req, res) => {
+    if (!req.isAuthenticated()) return res.status(401).send("Unauthorized");
+    const notification = await storage.markNotificationAsRead(Number(req.params.id));
+    if (!notification) return res.status(404).send("Notification not found");
+    res.json(notification);
   });
 
   // Testimonials
