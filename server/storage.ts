@@ -1,9 +1,19 @@
-import { Product, InsertProduct, Order, InsertOrder, Testimonial, InsertTestimonial } from "@shared/schema";
+import { Product, InsertProduct, Order, InsertOrder, Testimonial, InsertTestimonial, User, InsertUser } from "@shared/schema";
 import { db } from "./db";
 import { eq } from "drizzle-orm";
-import { products, orders, testimonials } from "@shared/schema";
+import { products, orders, testimonials, users } from "@shared/schema";
+import session from "express-session";
+import connectPg from "connect-pg-simple";
+import { pool } from "./db";
+
+const PostgresSessionStore = connectPg(session);
 
 export interface IStorage {
+  // Users
+  getUser(id: number): Promise<User | undefined>;
+  getUserByUsername(username: string): Promise<User | undefined>;
+  createUser(user: InsertUser): Promise<User>;
+
   // Products
   getProducts(): Promise<Product[]>;
   getProduct(id: number): Promise<Product | undefined>;
@@ -20,9 +30,37 @@ export interface IStorage {
   getTestimonials(approved?: boolean): Promise<Testimonial[]>;
   createTestimonial(testimonial: InsertTestimonial): Promise<Testimonial>;
   approveTestimonial(id: number): Promise<Testimonial | undefined>;
+
+  // Session store
+  sessionStore: session.Store;
 }
 
 export class DatabaseStorage implements IStorage {
+  sessionStore: session.Store;
+
+  constructor() {
+    this.sessionStore = new PostgresSessionStore({
+      pool,
+      createTableIfMissing: true,
+    });
+  }
+
+  // User methods
+  async getUser(id: number): Promise<User | undefined> {
+    const [user] = await db.select().from(users).where(eq(users.id, id));
+    return user;
+  }
+
+  async getUserByUsername(username: string): Promise<User | undefined> {
+    const [user] = await db.select().from(users).where(eq(users.username, username));
+    return user;
+  }
+
+  async createUser(user: InsertUser): Promise<User> {
+    const [newUser] = await db.insert(users).values(user).returning();
+    return newUser;
+  }
+
   // Product methods
   async getProducts(): Promise<Product[]> {
     return await db.select().from(products);
