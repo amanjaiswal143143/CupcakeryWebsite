@@ -52,13 +52,17 @@ export default function Navbar() {
             </Button>
           )}
 
-          <Button variant="outline" size="icon">
-            <ShoppingBag className="h-5 w-5" />
-            {cartItems.length > 0 && (
-              <span className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-primary text-xs text-white flex items-center justify-center">
-                {cartItems.length}
-              </span>
-            )}
+          <Button variant="outline" size="icon" asChild>
+            <Link href="/cart">
+              <div className="relative">
+                <ShoppingBag className="h-5 w-5" />
+                {cartItems.length > 0 && (
+                  <span className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-primary text-xs text-white flex items-center justify-center">
+                    {cartItems.length}
+                  </span>
+                )}
+              </div>
+            </Link>
           </Button>
         </div>
       </div>

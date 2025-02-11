@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { ShoppingCart } from "lucide-react";
 import { useCartStore } from "@/store/store";
 import { useToast } from "@/hooks/use-toast";
+import { useLocation } from "wouter";
 
 interface ProductCardProps {
   product: Product;
@@ -20,12 +21,24 @@ interface ProductCardProps {
 export default function ProductCard({ product }: ProductCardProps) {
   const addToCart = useCartStore((state) => state.addItem);
   const { toast } = useToast();
+  const [, setLocation] = useLocation();
 
   const handleAddToCart = () => {
     addToCart(product);
     toast({
       title: "Added to cart",
-      description: `${product.name} has been added to your cart.`,
+      description: (
+        <div className="flex items-center justify-between">
+          <span>{product.name} has been added to your cart.</span>
+          <Button
+            variant="link"
+            className="px-0"
+            onClick={() => setLocation("/cart")}
+          >
+            View Cart
+          </Button>
+        </div>
+      ),
     });
   };
 
@@ -36,22 +49,24 @@ export default function ProductCard({ product }: ProductCardProps) {
     >
       <Card className="overflow-hidden">
         <div className="aspect-square relative overflow-hidden">
-          <img
+          <motion.img
             src={product.image}
             alt={product.name}
-            className="h-full w-full object-cover transition-transform hover:scale-105"
+            className="h-full w-full object-cover"
+            whileHover={{ scale: 1.05 }}
+            transition={{ type: "spring", stiffness: 300 }}
           />
         </div>
-        
+
         <CardHeader>
           <CardTitle className="font-serif">{product.name}</CardTitle>
           <CardDescription>{product.description}</CardDescription>
         </CardHeader>
-        
+
         <CardContent>
           <p className="text-lg font-semibold">₹{product.price}</p>
         </CardContent>
-        
+
         <CardFooter>
           <Button
             onClick={handleAddToCart}
