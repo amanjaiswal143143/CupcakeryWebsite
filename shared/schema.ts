@@ -47,19 +47,32 @@ export const testimonials = pgTable("testimonials", {
   isApproved: boolean("is_approved").default(false),
 });
 
+export const hampers = pgTable("hampers", {
+  id: serial("id").primaryKey(),
+  name: text("name").notNull(),
+  description: text("description").notNull(),
+  totalPrice: decimal("total_price").notNull(),
+  items: text("items").notNull(), // JSON string of included products and quantities
+  userId: integer("user_id").notNull(),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
 export const insertUserSchema = createInsertSchema(users).omit({ id: true });
 export const insertProductSchema = createInsertSchema(products).omit({ id: true });
 export const insertOrderSchema = createInsertSchema(orders).omit({ id: true });
 export const insertTestimonialSchema = createInsertSchema(testimonials).omit({ id: true });
 export const insertNotificationSchema = createInsertSchema(notifications).omit({ id: true });
+export const insertHamperSchema = createInsertSchema(hampers).omit({ id: true });
 
 export type User = typeof users.$inferSelect;
 export type Product = typeof products.$inferSelect;
 export type Order = typeof orders.$inferSelect;
 export type Testimonial = typeof testimonials.$inferSelect;
 export type Notification = typeof notifications.$inferSelect;
+export type Hamper = typeof hampers.$inferSelect;
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type InsertProduct = z.infer<typeof insertProductSchema>;
 export type InsertOrder = z.infer<typeof insertOrderSchema>;
 export type InsertTestimonial = z.infer<typeof insertTestimonialSchema>;
 export type InsertNotification = z.infer<typeof insertNotificationSchema>;
+export type InsertHamper = z.infer<typeof insertHamperSchema>;

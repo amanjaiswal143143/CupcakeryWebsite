@@ -1,6 +1,6 @@
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
-import { ShoppingBag, User } from "lucide-react";
+import { ShoppingBag, User, Gift } from "lucide-react";
 import { useCartStore } from "@/store/store";
 import { useAuth } from "@/hooks/use-auth";
 import {
@@ -25,6 +25,12 @@ export default function Navbar() {
           <Link href="/products">
             <a className="text-sm font-medium transition-colors hover:text-primary">
               Products
+            </a>
+          </Link>
+
+          <Link href="/hamper-builder">
+            <a className="text-sm font-medium transition-colors hover:text-primary">
+              Build Hamper
             </a>
           </Link>
 
