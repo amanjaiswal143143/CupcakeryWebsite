@@ -1,0 +1,32 @@
+Develop a fully functional, modern, and elegant Next.js-based website for Bindi’s Cupcakery, a cloud kitchen specializing in vegetarian, eggless desserts. The website should have a visually stunning UI/UX, ensuring a seamless browsing and ordering experience. Take inspiration from cinnamon.kitchen for aesthetics.
+
+Key Features & Requirements:
+Frontend (React + Next.js + Tailwind CSS)
+Hero Section: A welcoming homepage with a beautifully animated introduction to Bindi’s Cupcakery.
+Product Showcase: High-resolution images, descriptions, and pricing for desserts, presented in sleek product cards.
+Photo Gallery & Carousel: Showcase special products, seasonal offerings, and popular items.
+Hover Effect: Implement mouse hover effects similar to spilling tiny coffee beans for an engaging experience.
+Customizable Dessert Hampers: Allow users to create custom hampers for occasions like birthdays, weddings, and festivals.
+Smooth Animations: Use framer-motion for subtle transitions and animations.
+User & Order Management
+Easy Ordering Flow: Users should be able to browse, select, and place orders seamlessly.
+WhatsApp Order Integration: Order details are directly sent to the owner’s WhatsApp via QR scan or button click.
+Admin Panel:
+Add, edit, update, and delete products.
+Review and manage customer testimonials (approve before publishing).
+View analytics on orders, revenue, and total customers.
+Payments & Transactions
+QR-based UPI Payment System: Integrate UPI/QR payment to enable direct transactions.
+Authentication & Database
+User & Admin Authentication: Secure login for User & Admin Authentication: Secure login for customers and admin.
+Database: Use PostgreSQL with Prisma ORM for efficient data handling. (also mention where to put the connection string)
+Dummy Data: Populate the database with sample products, orders, and users for testing.
+Technical Stack
+Frontend: Next.js (React) + Tailwind CSS.
+Components: shadcn/ui for modern UI elements.
+State Management: Zustand/Redux for managing products and orders.
+Animations: framer-motion for interactive animations.
+SEO & Performance: Lazy loading, optimized metadata, and fast navigation.
+Color Palette: Warm pastel tones with a brownish gradient theme to reflect a bakery aesthetic.
+Modern UI/UX: Use rounded cards, soft shadows, and elegant typography.
+💡 Extra: If a page doesn’t exist, create a new one with appropriate styling. Ensure a world-class modern UI/UX with a sleek and delightful design.
