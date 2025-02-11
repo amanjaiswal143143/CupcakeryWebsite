@@ -28,6 +28,7 @@ import { apiRequest } from "@/lib/queryClient";
 import { Minus, Plus, Trash2 } from "lucide-react";
 import { motion } from "framer-motion";
 import UPIPayment from "@/components/payment/upi-payment";
+import ReviewForm from "@/components/reviews/review-form";
 
 const checkoutSchema = z.object({
   customerName: z.string().min(1, "Name is required"),
@@ -44,6 +45,7 @@ export default function CartPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showPayment, setShowPayment] = useState(false);
   const [orderId, setOrderId] = useState<number | null>(null);
+  const [showReview, setShowReview] = useState(false);
 
   const form = useForm<CheckoutData>({
     resolver: zodResolver(checkoutSchema),
@@ -82,7 +84,7 @@ export default function CartPage() {
         ...data,
         items: JSON.stringify(items),
         totalAmount: total(),
-        status: 'pending',
+        status: "pending",
       };
 
       const response = await apiRequest("POST", "/api/orders", orderData);
@@ -104,16 +106,16 @@ export default function CartPage() {
     try {
       const whatsappUrl = `https://wa.me/+91XXXXXXXX?text=${encodeURIComponent(
         `New order #${orderId} received!\n\nCustomer: ${form.getValues(
-          'customerName'
-        )}\nPhone: ${form.getValues('phone')}\nAmount: ₹${total()}\n\nItems:\n${items.map(
-          item => `${item.product.name} x${item.quantity}`
-        ).join('\n')}`
+          "customerName"
+        )}\nPhone: ${form.getValues("phone")}\nAmount: ₹${total()}\n\nItems:\n${items
+          .map((item) => `${item.product.name} x${item.quantity}`)
+          .join("\n")}`
       )}`;
-      window.open(whatsappUrl, '_blank');
+      window.open(whatsappUrl, "_blank");
 
       clearCart();
-      toast({ title: "Order placed successfully!" });
-      setLocation("/products");
+      setShowPayment(false);
+      setShowReview(true); // Show review form after payment
     } catch (error) {
       toast({
         title: "Error sending notification",
@@ -124,147 +126,164 @@ export default function CartPage() {
     }
   };
 
+  const handleReviewSubmit = () => {
+    toast({ title: "Order placed successfully!" });
+    setLocation("/products");
+  };
+
   return (
     <div className="container py-8">
       <h1 className="text-3xl font-serif font-bold mb-8">Your Cart</h1>
-
-      <div className="grid gap-8 lg:grid-cols-3">
-        <div className="lg:col-span-2">
-          <div className="space-y-4">
-            {items.map((item) => (
-              <motion.div
-                key={item.product.id}
-                layout
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-              >
-                <Card>
-                  <CardContent className="p-4">
-                    <div className="flex gap-4">
-                      <div className="w-24 h-24">
-                        <img
-                          src={item.product.image}
-                          alt={item.product.name}
-                          className="w-full h-full object-cover rounded-lg"
-                        />
-                      </div>
-                      <div className="flex-1">
-                        <h3 className="font-medium">{item.product.name}</h3>
-                        <p className="text-sm text-muted-foreground">
-                          ₹{item.product.price} × {item.quantity}
-                        </p>
-                        <div className="flex items-center gap-2 mt-2">
-                          <Button
-                            variant="outline"
-                            size="icon"
-                            onClick={() => {
-                              const newQuantity = item.quantity - 1;
-                              if (newQuantity === 0) {
-                                removeItem(item.product.id);
-                              } else {
+      {showReview ? (
+        <div className="max-w-md mx-auto">
+          <ReviewForm orderId={orderId!} onSubmit={handleReviewSubmit} />
+        </div>
+      ) : (
+        <div className="grid gap-8 lg:grid-cols-3">
+          <div className="lg:col-span-2">
+            <div className="space-y-4">
+              {items.map((item) => (
+                <motion.div
+                  key={item.product.id}
+                  layout
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                >
+                  <Card>
+                    <CardContent className="p-4">
+                      <div className="flex gap-4">
+                        <div className="w-24 h-24">
+                          <img
+                            src={item.product.image}
+                            alt={item.product.name}
+                            className="w-full h-full object-cover rounded-lg"
+                          />
+                        </div>
+                        <div className="flex-1">
+                          <h3 className="font-medium">{item.product.name}</h3>
+                          <p className="text-sm text-muted-foreground">
+                            ₹{item.product.price} × {item.quantity}
+                          </p>
+                          <div className="flex items-center gap-2 mt-2">
+                            <Button
+                              variant="outline"
+                              size="icon"
+                              onClick={() => {
+                                const newQuantity = item.quantity - 1;
+                                if (newQuantity === 0) {
+                                  removeItem(item.product.id);
+                                } else {
+                                  updateQuantity(
+                                    item.product.id,
+                                    newQuantity
+                                  );
+                                }
+                              }}
+                            >
+                              <Minus className="h-4 w-4" />
+                            </Button>
+                            <span>{item.quantity}</span>
+                            <Button
+                              variant="outline"
+                              size="icon"
+                              onClick={() =>
                                 updateQuantity(
                                   item.product.id,
-                                  newQuantity
-                                );
+                                  item.quantity + 1
+                                )
                               }
-                            }}
-                          >
-                            <Minus className="h-4 w-4" />
-                          </Button>
-                          <span>{item.quantity}</span>
-                          <Button
-                            variant="outline"
-                            size="icon"
-                            onClick={() =>
-                              updateQuantity(
-                                item.product.id,
-                                item.quantity + 1
-                              )
-                            }
-                          >
-                            <Plus className="h-4 w-4" />
-                          </Button>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="ml-auto"
-                            onClick={() => removeItem(item.product.id)}
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </Button>
+                            >
+                              <Plus className="h-4 w-4" />
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="ml-auto"
+                              onClick={() => removeItem(item.product.id)}
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </div>
                         </div>
                       </div>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+
+          <div>
+            <Card>
+              <CardHeader>
+                <CardTitle>Order Summary</CardTitle>
+                <CardDescription>
+                  Complete your order by providing delivery details
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Form {...form}>
+                  <form
+                    onSubmit={form.handleSubmit(onSubmit)}
+                    className="space-y-4"
+                  >
+                    <FormField
+                      control={form.control}
+                      name="customerName"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Name</FormLabel>
+                          <FormControl>
+                            <Input {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="phone"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Phone</FormLabel>
+                          <FormControl>
+                            <Input {...field} type="tel" />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <div className="pt-4 border-t">
+                      <div className="flex justify-between text-lg font-semibold">
+                        <span>Total</span>
+                        <span>₹{total()}</span>
+                      </div>
                     </div>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            ))}
+                    <Button
+                      type="submit"
+                      className="w-full"
+                      disabled={isSubmitting}
+                    >
+                      Place Order
+                    </Button>
+                  </form>
+                </Form>
+                {showPayment && orderId && (
+                  <div className="mt-4">
+                    <UPIPayment
+                      amount={total()}
+                      merchantUPI="merchant@upi" // Replace with actual merchant UPI ID
+                      orderId={orderId.toString()}
+                      onPaymentComplete={handlePaymentComplete}
+                    />
+                  </div>
+                )}
+              </CardContent>
+            </Card>
           </div>
         </div>
-
-        <div>
-          <Card>
-            <CardHeader>
-              <CardTitle>Order Summary</CardTitle>
-              <CardDescription>
-                Complete your order by providing delivery details
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-                  <FormField
-                    control={form.control}
-                    name="customerName"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Name</FormLabel>
-                        <FormControl>
-                          <Input {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="phone"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Phone</FormLabel>
-                        <FormControl>
-                          <Input {...field} type="tel" />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <div className="pt-4 border-t">
-                    <div className="flex justify-between text-lg font-semibold">
-                      <span>Total</span>
-                      <span>₹{total()}</span>
-                    </div>
-                  </div>
-                  <Button type="submit" className="w-full" disabled={isSubmitting}>
-                    Place Order
-                  </Button>
-                </form>
-              </Form>
-              {showPayment && orderId && (
-                <div className="mt-4">
-                  <UPIPayment
-                    amount={total()}
-                    merchantUPI="merchant@upi" // Replace with actual merchant UPI ID
-                    orderId={orderId.toString()}
-                    onPaymentComplete={handlePaymentComplete}
-                  />
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        </div>
-      </div>
+      )}
     </div>
   );
 }

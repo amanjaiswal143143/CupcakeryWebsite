@@ -23,7 +23,7 @@ function Router() {
         <Route path="/auth" component={AuthPage} />
         <Route path="/cart" component={CartPage} />
         <Route path="/hamper-builder" component={HamperBuilder} />
-        <ProtectedRoute path="/admin" component={AdminPage} />
+        <ProtectedRoute path="/admin" component={AdminPage} adminOnly />
         <Route component={NotFound} />
       </Switch>
     </div>
