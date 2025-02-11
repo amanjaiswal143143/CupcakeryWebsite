@@ -27,6 +27,7 @@ import { z } from "zod";
 import { apiRequest } from "@/lib/queryClient";
 import { Minus, Plus, Trash2 } from "lucide-react";
 import { motion } from "framer-motion";
+import UPIPayment from "@/components/payment/upi-payment";
 
 const checkoutSchema = z.object({
   customerName: z.string().min(1, "Name is required"),
@@ -41,6 +42,8 @@ export default function CartPage() {
   const [, setLocation] = useLocation();
   const { items, removeItem, updateQuantity, clearCart, total } = useCartStore();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showPayment, setShowPayment] = useState(false);
+  const [orderId, setOrderId] = useState<number | null>(null);
 
   const form = useForm<CheckoutData>({
     resolver: zodResolver(checkoutSchema),
@@ -79,13 +82,13 @@ export default function CartPage() {
         ...data,
         items: JSON.stringify(items),
         totalAmount: total(),
-        status: 'pending',  // Add explicit status
+        status: 'pending',
       };
 
-      await apiRequest("POST", "/api/orders", orderData);
-      clearCart();
-      toast({ title: "Order placed successfully!" });
-      setLocation("/products");
+      const response = await apiRequest("POST", "/api/orders", orderData);
+      const order = await response.json();
+      setOrderId(order.id);
+      setShowPayment(true);
     } catch (error) {
       toast({
         title: "Failed to place order",
@@ -94,6 +97,30 @@ export default function CartPage() {
       });
     } finally {
       setIsSubmitting(false);
+    }
+  };
+
+  const handlePaymentComplete = async () => {
+    try {
+      const whatsappUrl = `https://wa.me/+91XXXXXXXX?text=${encodeURIComponent(
+        `New order #${orderId} received!\n\nCustomer: ${form.getValues(
+          'customerName'
+        )}\nPhone: ${form.getValues('phone')}\nAmount: ₹${total()}\n\nItems:\n${items.map(
+          item => `${item.product.name} x${item.quantity}`
+        ).join('\n')}`
+      )}`;
+      window.open(whatsappUrl, '_blank');
+
+      clearCart();
+      toast({ title: "Order placed successfully!" });
+      setLocation("/products");
+    } catch (error) {
+      toast({
+        title: "Error sending notification",
+        description:
+          "Your order is confirmed but we couldn't send the notification",
+        variant: "destructive",
+      });
     }
   };
 
@@ -136,7 +163,10 @@ export default function CartPage() {
                               if (newQuantity === 0) {
                                 removeItem(item.product.id);
                               } else {
-                                updateQuantity(item.product.id, newQuantity);
+                                updateQuantity(
+                                  item.product.id,
+                                  newQuantity
+                                );
                               }
                             }}
                           >
@@ -147,7 +177,10 @@ export default function CartPage() {
                             variant="outline"
                             size="icon"
                             onClick={() =>
-                              updateQuantity(item.product.id, item.quantity + 1)
+                              updateQuantity(
+                                item.product.id,
+                                item.quantity + 1
+                              )
                             }
                           >
                             <Plus className="h-4 w-4" />
@@ -213,15 +246,21 @@ export default function CartPage() {
                       <span>₹{total()}</span>
                     </div>
                   </div>
-                  <Button
-                    type="submit"
-                    className="w-full"
-                    disabled={isSubmitting}
-                  >
+                  <Button type="submit" className="w-full" disabled={isSubmitting}>
                     Place Order
                   </Button>
                 </form>
               </Form>
+              {showPayment && orderId && (
+                <div className="mt-4">
+                  <UPIPayment
+                    amount={total()}
+                    merchantUPI="merchant@upi" // Replace with actual merchant UPI ID
+                    orderId={orderId.toString()}
+                    onPaymentComplete={handlePaymentComplete}
+                  />
+                </div>
+              )}
             </CardContent>
           </Card>
         </div>

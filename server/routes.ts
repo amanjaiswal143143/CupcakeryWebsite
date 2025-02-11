@@ -59,10 +59,11 @@ export function registerRoutes(app: Express): Server {
 
   app.post("/api/orders", async (req, res) => {
     if (!req.isAuthenticated()) return res.status(401).send("Unauthorized");
+
     const order = await storage.createOrder({
       ...req.body,
       userId: req.user!.id,
-      status: 'pending',  // Explicitly set the default status
+      status: 'pending',
     });
 
     // Create notification for admin
@@ -88,6 +89,24 @@ export function registerRoutes(app: Express): Server {
 
     res.json(updated);
   });
+
+  // Add payment verification route
+  app.post("/api/orders/:id/verify-payment", async (req, res) => {
+    if (!req.isAuthenticated()) return res.status(401).send("Unauthorized");
+
+    const order = await storage.updateOrderStatus(Number(req.params.id), 'confirmed');
+    if (!order) return res.status(404).send("Order not found");
+
+    // Create notification for user
+    await storage.createNotification({
+      userId: order.userId,
+      title: "Payment Confirmed",
+      message: `Your payment for order #${order.id} has been confirmed. We'll start preparing your order!`,
+    });
+
+    res.json(order);
+  });
+
 
   // Notifications
   app.get("/api/notifications", async (req, res) => {
