@@ -79,6 +79,7 @@ export default function CartPage() {
         ...data,
         items: JSON.stringify(items),
         totalAmount: total(),
+        status: 'pending',  // Add explicit status
       };
 
       await apiRequest("POST", "/api/orders", orderData);

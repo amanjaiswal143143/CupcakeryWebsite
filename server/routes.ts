@@ -62,6 +62,7 @@ export function registerRoutes(app: Express): Server {
     const order = await storage.createOrder({
       ...req.body,
       userId: req.user!.id,
+      status: 'pending',  // Explicitly set the default status
     });
 
     // Create notification for admin
