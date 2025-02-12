@@ -16,7 +16,7 @@ import { ProtectedRoute } from "./lib/protected-route";
 
 function Router() {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen w-full bg-backg round">
       <Navbar />
       <Switch>
         <Route path="/" component={HomePage} />
@@ -24,9 +24,8 @@ function Router() {
         <Route path="/auth" component={AuthPage} />
         <Route path="/cart" component={CartPage} />
         <Route path="/hamper-builder" component={HamperBuilder} />
-        <ProtectedRoute path="/orders" component={UserOrdersPage} />
-        <ProtectedRoute path="/admin" component={AdminPage} adminOnly />
-        <Route component={NotFound} />
+        <ProtectedRoute path="/orders" component={() => <UserOrdersPage />} />
+<ProtectedRoute path="/admin" component={() => <AdminPage />} adminOnly />
       </Switch>
     </div>
   );

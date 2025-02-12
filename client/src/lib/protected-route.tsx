@@ -1,6 +1,7 @@
 import { useAuth } from "@/hooks/use-auth";
 import { Loader2 } from "lucide-react";
-import { Route, Redirect } from "wouter";
+import { Route } from "wouter";
+import { useLocation } from "wouter";// Correct way to navigate
 
 export function ProtectedRoute({
   path,
@@ -12,6 +13,7 @@ export function ProtectedRoute({
   adminOnly?: boolean;
 }) {
   const { user, isLoading } = useAuth();
+  const [, navigate] = useLocation(); // Correct way to navigate in Wouter
 
   if (isLoading) {
     return (
@@ -24,12 +26,13 @@ export function ProtectedRoute({
   }
 
   if (!user || (adminOnly && !user.isAdmin)) {
-    return (
-      <Route path={path}>
-        <Redirect to="/auth" />
-      </Route>
-    );
+    navigate("/auth"); // Redirect user in Wouter
+    return null; // Return null to prevent rendering
   }
 
-  return <Route path={path} component={Component} />;
+  return (
+    <Route path={path}>
+      <Component />
+    </Route>
+  );
 }

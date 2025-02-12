@@ -1,11 +1,24 @@
 import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
+import expressSession from "express-session";
+import dotenv from "dotenv";
 import { setupVite, serveStatic, log } from "./vite";
-
+dotenv.config();
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-
+app.use(
+  expressSession({
+    secret: process.env.SESSION_SECRET || "supersecretkey",
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+      secure: process.env.NODE_ENV === "production", // Secure cookies in production
+      httpOnly: true, // Prevent XSS attacks
+      maxAge: 1000 * 60 * 60 * 24, // 1 day expiration
+    },
+  })
+);
 app.use((req, res, next) => {
   const start = Date.now();
   const path = req.path;
@@ -58,8 +71,9 @@ app.use((req, res, next) => {
 
   // ALWAYS serve the app on port 5000
   // this serves both the API and the client
+  const HOST = process.env.NODE_ENV === "production" ? "0.0.0.0" : "localhost";
   const PORT = 5000;
-  server.listen(PORT, "0.0.0.0", () => {
-    log(`serving on port ${PORT}`);
+  server.listen(PORT, HOST, () => {
+    log(`Server running on http://${HOST}:${PORT}`);
   });
 })();

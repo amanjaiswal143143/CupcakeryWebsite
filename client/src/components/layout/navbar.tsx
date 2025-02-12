@@ -15,21 +15,21 @@ export default function Navbar() {
   const { user, logoutMutation } = useAuth();
 
   return (
-    <nav className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container flex h-16 items-center">
+    <nav className="absolute top-0 left-0 right-0 z-50 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <div className="container flex h-16 items-center justify-between p-6">
         <Link href="/">
           <a className="font-serif text-2xl font-bold">Bindi's Cupcakery</a>
         </Link>
 
-        <div className="flex items-center space-x-4 ml-auto">
+        <div className="flex items-center gap-6">
           <Link href="/products">
-            <a className="text-sm font-medium transition-colors hover:text-primary">
+            <a className="text-sm font-medium transition-colors hover:text-gray-600">
               Products
             </a>
           </Link>
 
           <Link href="/hamper-builder">
-            <a className="text-sm font-medium transition-colors hover:text-primary">
+            <a className="text-sm font-medium transition-colors hover:text-gray-600">
               Build Hamper
             </a>
           </Link>

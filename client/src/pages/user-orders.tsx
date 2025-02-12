@@ -76,7 +76,7 @@ export default function UserOrdersPage() {
                       <div>
                         <CardTitle>Order #{order.id}</CardTitle>
                         <CardDescription>
-                          {new Date(order.createdAt).toLocaleDateString()}
+                        {new Date(order.createdAt ?? '').toLocaleDateString()}
                         </CardDescription>
                       </div>
                       <Badge className={getStatusColor(order.status)}>

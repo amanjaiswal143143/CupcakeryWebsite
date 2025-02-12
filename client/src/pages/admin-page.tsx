@@ -217,8 +217,8 @@ export default function AdminPage() {
                 <CardContent>
                   <p>{notification.message}</p>
                   <p className="text-sm text-muted-foreground mt-2">
-                    {new Date(notification.createdAt).toLocaleString()}
-                  </p>
+  {notification.createdAt ? new Date(notification.createdAt).toLocaleString() : 'Unknown'}
+</p>
                 </CardContent>
               </Card>
             ))}
