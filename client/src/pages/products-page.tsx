@@ -1,3 +1,4 @@
+
 import { useQuery } from "@tanstack/react-query";
 import { Product } from "@shared/schema";
 import ProductGrid from "@/components/sections/product-grid";

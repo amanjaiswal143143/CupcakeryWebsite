@@ -7,9 +7,10 @@ import { Link } from "wouter"
 import { useState } from "react"
 
 const images = [
-  "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-HOF4QSfHSJPscQkLSOCgYMi9jFjzdX.png",
-  "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-HOF4QSfHSJPscQkLSOCgYMi9jFjzdX.png",
-  "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-HOF4QSfHSJPscQkLSOCgYMi9jFjzdX.png",
+  "https://images.unsplash.com/photo-1587668178277-295251f900ce",
+  // "https://images.unsplash.com/photo-1521886243261-de87e3108a5a",
+  "https://images.unsplash.com/photo-1603532648955-039310d9ed75",
+  "https://images.unsplash.com/photo-1586985289688-ca3cf47d3e6e",
 ]
 
 export default function Hero() {
@@ -63,11 +64,11 @@ export default function Hero() {
             transition={{ delay: 0.6 }}
             className="mt-4 text-lg text-gray-600"
           >
-            Your perfect spot for coffee, pastries, and more.
+            <b> Your Cravings, Our Creations!</b>
           </motion.p>
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.8 }} className="mt-8">
             <Button size="lg" className="rounded-full bg-black text-white hover:bg-gray-800">
-              Explore menu
+              <Link href="">EXPLORE MENU</Link>
             </Button>
           </motion.div>
         </div>

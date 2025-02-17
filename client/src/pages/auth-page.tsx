@@ -43,7 +43,9 @@ export default function AuthPage() {
     resolver: zodResolver(insertUserSchema),
     defaultValues: {
       username: "",
+      email: "",
       password: "",
+      passwordConfirmation: "",
     },
   });
 
@@ -88,6 +90,7 @@ export default function AuthPage() {
                         </FormItem>
                       )}
                     />
+                   
                     <FormField
                       control={loginForm.control}
                       name="password"
@@ -128,12 +131,38 @@ export default function AuthPage() {
                         </FormItem>
                       )}
                     />
+                     <FormField
+                      control={registerForm.control}
+                      name="email"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>email</FormLabel>
+                          <FormControl>
+                            <Input {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
                     <FormField
                       control={registerForm.control}
                       name="password"
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>Password</FormLabel>
+                          <FormControl>
+                            <Input type="password" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                     <FormField
+                      control={registerForm.control}
+                      name="passwordConfirmation"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>passwordConfirmation</FormLabel>
                           <FormControl>
                             <Input type="password" {...field} />
                           </FormControl>
@@ -167,7 +196,6 @@ export default function AuthPage() {
             </p>
             <ul className="mt-4 space-y-2 text-muted-foreground">
               <li>• Track your orders</li>
-              <li>• Save your favorite items</li>
               <li>• Get special offers</li>
               <li>• Leave reviews</li>
             </ul>

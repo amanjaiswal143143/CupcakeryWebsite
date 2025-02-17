@@ -104,7 +104,7 @@ export default function CartPage() {
 
   const handlePaymentComplete = async () => {
     try {
-      const whatsappUrl = `https://wa.me/+91XXXXXXXX?text=${encodeURIComponent(
+      const whatsappUrl = `https://wa.me/+919770096693?text=${encodeURIComponent(
         `New order #${orderId} received!\n\nCustomer: ${form.getValues(
           "customerName"
         )}\nPhone: ${form.getValues("phone")}\nAmount: ₹${total()}\n\nItems:\n${items

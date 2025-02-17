@@ -27,7 +27,7 @@ export default function UPIPayment({
   const [isVerifying, setIsVerifying] = useState(false);
 
   // Generate UPI payment URL
-  const upiUrl = `upi://pay?pa=${merchantUPI}&pn=Bindi's Cupcakery&tn=Order ${orderId}&am=${amount}&cu=INR`;
+  const upiUrl =  "upi://pay?pa=9770096693@axl&pn=Aman%20Jaiswal&cu=INR";
 
   const handleVerifyPayment = async () => {
     setIsVerifying(true);
@@ -69,11 +69,12 @@ export default function UPIPayment({
             variant="outline"
             className="w-full"
             onClick={() => {
-              // Open in UPI app
-              window.location.href = upiUrl;
+              // Open the UPI payment URL in the browser
+              window.location.href = "upi://pay?pa=9770096693@axl&pn=Aman%20Jaiswal&cu=INR"
+              ;
             }}
           >
-            Open in UPI App
+            Open in Phone Pay
           </Button>
         </div>
       </CardContent>

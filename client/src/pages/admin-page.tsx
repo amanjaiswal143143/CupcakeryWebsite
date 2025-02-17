@@ -1,3 +1,4 @@
+
 import { useQuery } from "@tanstack/react-query";
 import { Order, Product, Testimonial, Notification } from "@shared/schema";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -228,3 +229,5 @@ export default function AdminPage() {
     </div>
   );
 }
+// In your page component
+<AdminPage /> // Usage: <AdminPage /> or <AdminPage review-Form orderId={123} />
