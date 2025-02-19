@@ -3,6 +3,7 @@ import { Testimonial } from "@shared/schema";
 import { Card, CardContent } from "@/components/ui/card";
 import { Star } from "lucide-react";
 import { motion } from "framer-motion";
+import React from "react";
 
 export default function Testimonials() {
   const { data: testimonials } = useQuery<Testimonial[]>({
@@ -33,7 +34,7 @@ export default function Testimonials() {
             transition={{ delay: index * 0.1 }}
           >
             <Card>
-              <CardContent className="p-6">
+              <CardContent>
                 <div className="flex mb-4">
                   {[...Array(testimonial.rating)].map((_, i) => (
                     <Star

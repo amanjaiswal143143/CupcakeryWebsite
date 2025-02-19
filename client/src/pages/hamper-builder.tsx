@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Product } from "@shared/schema";
-import { useAuth } from "@/hooks/use-auth";
+import useAuth from "@/hooks/use-auth";
 import { useLocation } from "wouter";
 import { motion } from "framer-motion";
 import { useCartStore } from "@/store/store";
@@ -78,6 +78,7 @@ export default function HamperBuilder() {
       image: selectedItems[0].product.image, // Use first item's image
       category: "hamper",
       isAvailable: true,
+      rating: 0
     };
 
     addToCart(hamperProduct);
@@ -116,7 +117,7 @@ export default function HamperBuilder() {
             <h2 className="font-serif text-xl font-semibold">Available Items</h2>
             {products?.map((product) => (
               <Card key={product.id}>
-                <CardContent className="p-4">
+                <CardContent>
                   <div className="flex gap-4">
                     <div className="w-24 h-24">
                       <img
@@ -171,7 +172,7 @@ export default function HamperBuilder() {
           </div>
 
           <div>
-            <Card className="sticky top-8">
+            <Card>
               <CardHeader>
                 <CardTitle>Your Hamper Summary</CardTitle>
                 <CardDescription>

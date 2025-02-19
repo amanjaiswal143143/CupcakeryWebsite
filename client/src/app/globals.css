@@ -1,0 +1,105 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    @apply box-border;
+  }
+
+  body {
+    @apply min-h-screen w-full overflow-x-hidden;
+  }
+}
+
+@layer components {
+  .container {
+    @apply mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl w-full;
+  }
+}
+/* Add these styles to your global.css file */
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.bg-gradient-vignette {
+  background: radial-gradient(ellipse at center, transparent 50%, rgba(0, 0, 0, 0.6) 100%);
+  animation: fadeIn 1.5s ease-in-out;
+}
+
+/* For wider screens, allow hero to be taller */
+@media (min-width: 1200px) and (min-height: 800px) {
+  .hero-section {
+    height: 75vh;
+    max-height: 800px;
+  }
+}
+
+/* For smaller screens, adjust typography */
+@media (max-width: 768px) {
+  .hero-section {
+    height: 60vh;
+    min-height: 450px;
+  }
+}
+
+/* Optional: Typography enhancement */
+@font-face {
+  font-family: 'Cupcake';
+  src: url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
+  font-weight: normal;
+  font-style: normal;
+}
+
+/* Animation for the logo highlight */
+@keyframes shimmer {
+  0% { background-position: -100% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.logo-shimmer {
+  background: linear-gradient(
+    90deg, 
+    rgba(255,255,255,0) 0%, 
+    rgba(255,255,255,0.8) 50%, 
+    rgba(255,255,255,0) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 3s infinite;
+}
+
+/* Optional: Custom scrollbar for the page */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #111;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #333;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+@keyframes spin-slow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin-slow {
+  animation: spin-slow 20s linear infinite;
+}
+@import 'swiper/css';
+@import 'swiper/css/navigation';
+@import 'swiper/css/pagination';

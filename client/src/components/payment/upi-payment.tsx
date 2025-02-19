@@ -2,6 +2,7 @@ import { useState } from "react";
 import { QRCodeSVG } from "qrcode.react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
+import React from "react";
 import {
   Card,
   CardContent,
@@ -50,7 +51,7 @@ export default function UPIPayment({
           Scan the QR code with any UPI app to pay
         </CardDescription>
       </CardHeader>
-      <CardContent className="flex flex-col items-center space-y-4">
+      <CardContent>
         <div className="bg-white p-4 rounded-lg">
           <QRCodeSVG value={upiUrl} size={200} />
         </div>
@@ -75,6 +76,17 @@ export default function UPIPayment({
             }}
           >
             Open in Phone Pay
+          </Button>
+          <Button
+            variant="outline"
+            className="w-full"
+            onClick={() => {
+              // Open the UPI payment URL in the browser
+              window.location.href = "https://wa.me/9770096693?text=Hello%2C%20I%20want%20to%20order%20a%20cake%21"
+              ;
+            }}
+          >
+            GIVE AWAY 
           </Button>
         </div>
       </CardContent>

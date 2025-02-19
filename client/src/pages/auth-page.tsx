@@ -1,8 +1,15 @@
-import { useAuth } from "@/hooks/use-auth";
+import useAuth from "@/hooks/use-auth";
 import { useLocation } from "wouter";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { insertUserSchema, type InsertUser } from "@shared/schema";
+import { insertUserSchema } from "@shared/schema";
+
+type InsertUser = {
+  username: string;
+  email: string;
+  password: string;
+  passwordConfirmation?: string;
+};
 import {
   Card,
   CardContent,
@@ -60,7 +67,7 @@ export default function AuthPage() {
   return (
     <div className="min-h-screen grid lg:grid-cols-2">
       <div className="flex items-center justify-center p-8">
-        <Card className="w-full max-w-md">
+        <Card>
           <CardHeader>
             <CardTitle>Welcome to Bindi's Cupcakery</CardTitle>
             <CardDescription>

@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Testimonial } from "@shared/schema";
 import { Card, CardContent } from "@/components/ui/card";
 import { Star } from "lucide-react";
+import React from "react";
 
 export default function TestimonialsSection() {
   const { data: testimonials } = useQuery<Testimonial[]>({
@@ -18,8 +19,8 @@ export default function TestimonialsSection() {
         </h2>
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {testimonials.map((testimonial) => (
-            <Card key={testimonial.id} className="bg-background">
-              <CardContent className="pt-6">
+            <Card key={testimonial.id}>
+              <CardContent>
                 <div className="flex gap-1 mb-2">
                   {[...Array(5)].map((_, i) => (
                     <Star

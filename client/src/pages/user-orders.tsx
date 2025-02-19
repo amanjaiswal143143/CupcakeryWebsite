@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { Order } from "@shared/schema";
-import { useAuth } from "@/hooks/use-auth";
+import useAuth from "@/hooks/use-auth";
 import { useLocation } from "wouter";
 import { motion } from "framer-motion";
 import {

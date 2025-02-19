@@ -1,7 +1,8 @@
-import { useAuth } from "@/hooks/use-auth";
+import useAuth from "@/hooks/use-auth";
 import { Loader2 } from "lucide-react";
 import { Route } from "wouter";
 import { useLocation } from "wouter";// Correct way to navigate
+import React from "react";
 
 export function ProtectedRoute({
   path,

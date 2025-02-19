@@ -4,6 +4,7 @@ import { z } from "zod";
 
 export const users = pgTable("users", {
   id: serial("id").primaryKey(),
+  email: text("email").notNull().unique(),
   username: text("username").notNull().unique(),
   password: text("password").notNull(),
   isAdmin: boolean("is_admin").default(false),
@@ -16,7 +17,8 @@ export const products = pgTable("products", {
   price: decimal("price").notNull(),
   image: text("image").notNull(),
   category: text("category").notNull(),
-  isAvailable: boolean("is_available").default(true),
+  isAvailable: boolean("is_available").default(true).notNull(),
+  rating: integer("rating").notNull(),
 });
 
 export const orders = pgTable("orders", {

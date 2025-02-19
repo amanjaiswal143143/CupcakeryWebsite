@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useCartStore } from "@/store/store";
-import { useAuth } from "@/hooks/use-auth";
+import useAuth from "@/hooks/use-auth";
 import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import {
@@ -64,7 +64,7 @@ export default function CartPage() {
     return (
       <div className="container py-16">
         <Card>
-          <CardContent className="pt-6">
+          <CardContent>
             <div className="text-center">
               <h2 className="text-2xl font-bold mb-4">Your Cart is Empty</h2>
               <Button onClick={() => setLocation("/products")}>
@@ -151,7 +151,7 @@ export default function CartPage() {
                   exit={{ opacity: 0 }}
                 >
                   <Card>
-                    <CardContent className="p-4">
+                    <CardContent>
                       <div className="flex gap-4">
                         <div className="w-24 h-24">
                           <img

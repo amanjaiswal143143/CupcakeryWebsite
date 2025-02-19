@@ -12,6 +12,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import { Star, MessageSquare } from "lucide-react";
+import React from "react";
 
 interface ReviewFormProps {
   orderId: number;
@@ -82,7 +83,7 @@ export default function ReviewForm({ orderId, onSubmit }: ReviewFormProps) {
   }
 
   return (
-    <Card className="max-w-2xl mx-auto">
+    <Card>
       <CardHeader>
         <CardTitle>Write Your Review</CardTitle>
         <CardDescription>

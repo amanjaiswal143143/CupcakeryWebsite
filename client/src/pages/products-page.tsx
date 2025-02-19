@@ -15,7 +15,7 @@ export default function ProductsPage() {
       <div className="container py-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {[...Array(6)].map((_, i) => (
-            <Card key={i} className="p-4">
+            <Card key={i}>
               <Skeleton className="h-48 w-full rounded-lg" />
               <div className="space-y-2 mt-4">
                 <Skeleton className="h-4 w-3/4" />

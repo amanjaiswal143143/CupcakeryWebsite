@@ -1,4 +1,3 @@
-
 import { useQuery } from "@tanstack/react-query";
 import { Order, Product, Testimonial, Notification } from "@shared/schema";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -11,7 +10,8 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { apiRequest, queryClient } from "@/lib/queryClient";
+import { apiRequest } from "@/lib/api";
+import { queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import {
   BarChart,
@@ -32,12 +32,17 @@ import {
 
 export default function AdminPage() {
   const { toast } = useToast();
-  const { data: orders } = useQuery<Order[]>({ queryKey: ["/api/orders"] });
+  const { data: orders } = useQuery<Order[]>({
+    queryKey: ["/api/orders"],
+    queryFn: () => apiRequest("GET", "/api/orders"),
+  });
   const { data: testimonials } = useQuery<Testimonial[]>({
     queryKey: ["/api/testimonials"],
+    queryFn: () => apiRequest("GET", "/api/testimonials"),
   });
   const { data: notifications } = useQuery<Notification[]>({
     queryKey: ["/api/notifications"],
+    queryFn: () => apiRequest("GET", "/api/notifications"),
   });
 
   const approveTestimonial = async (id: number) => {
@@ -101,7 +106,7 @@ export default function AdminPage() {
       <div className="grid gap-4 grid-cols-1 md:grid-cols-3 mb-8">
         {stats.map((stat, i) => (
           <Card key={i}>
-            <CardContent className="flex items-center p-6">
+            <CardContent>
               <div className="p-2 bg-primary/10 rounded-lg">
                 <stat.icon className="h-6 w-6 text-primary" />
               </div>
@@ -119,7 +124,7 @@ export default function AdminPage() {
           <CardHeader>
             <CardTitle>Orders by Status</CardTitle>
           </CardHeader>
-          <CardContent className="h-[300px]">
+          <CardContent>
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={chartData}>
                 <CartesianGrid strokeDasharray="3 3" />
@@ -218,8 +223,8 @@ export default function AdminPage() {
                 <CardContent>
                   <p>{notification.message}</p>
                   <p className="text-sm text-muted-foreground mt-2">
-  {notification.createdAt ? new Date(notification.createdAt).toLocaleString() : 'Unknown'}
-</p>
+                    {notification.createdAt ? new Date(notification.createdAt).toLocaleString() : 'Unknown'}
+                  </p>
                 </CardContent>
               </Card>
             ))}
@@ -229,5 +234,3 @@ export default function AdminPage() {
     </div>
   );
 }
-// In your page component
-<AdminPage /> // Usage: <AdminPage /> or <AdminPage review-Form orderId={123} />

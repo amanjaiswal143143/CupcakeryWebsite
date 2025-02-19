@@ -1,0 +1,32 @@
+/* Scroll to top button styles */
+.scroll-to-top {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 40px;
+    height: 40px;
+    background-color: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 0; /* Making it square */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 1000;
+    transition: all 0.3s ease;
+  }
+  
+  .scroll-to-top:hover {
+    background-color: #f5f5f5;
+  }
+  
+  /* Arrow icon styles */
+  .scroll-to-top::before {
+    content: '';
+    width: 10px;
+    height: 10px;
+    border-top: 2px solid #333;
+    border-left: 2px solid #333;
+    transform: rotate(45deg);
+    margin-top: 4px;
+  }
